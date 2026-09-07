@@ -77,12 +77,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Serve PredictiveCache AI Real-Time Dashboard
 const candidateDashboardPaths = [
-  path.resolve(__dirname, '../../../PredictiveCache-AI-Package /PredictiveCache-AI-Dashboard.html'),
+  path.resolve(process.cwd(), '../../PredictiveCache-AI-Package/PredictiveCache-AI-Dashboard.html'),
+  path.resolve(process.cwd(), '../PredictiveCache-AI-Package/PredictiveCache-AI-Dashboard.html'),
+  path.resolve(__dirname, '../../PredictiveCache-AI-Package/PredictiveCache-AI-Dashboard.html'),
   path.resolve(__dirname, '../../../PredictiveCache-AI-Package/PredictiveCache-AI-Dashboard.html'),
+  path.resolve(__dirname, '../../../../PredictiveCache-AI-Package/PredictiveCache-AI-Dashboard.html'),
   path.resolve(__dirname, '../public/PredictiveCache-AI-Dashboard.html'),
-  path.resolve(process.cwd(), '../PredictiveCache-AI-Package /PredictiveCache-AI-Dashboard.html'),
   path.resolve(process.cwd(), '../../PredictiveCache-AI-Package /PredictiveCache-AI-Dashboard.html'),
-  '/Users/sohamdevrukhkar/Downloads/hackthon/PredictiveCache-AI-Package /PredictiveCache-AI-Dashboard.html'
+  path.resolve(process.cwd(), '../PredictiveCache-AI-Package /PredictiveCache-AI-Dashboard.html')
 ];
 
 app.get(['/dashboard', '/predictive-ai-cache'], (_req: Request, res: Response) => {

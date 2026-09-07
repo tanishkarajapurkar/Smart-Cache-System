@@ -68,9 +68,9 @@ predictiveCacheRoutes.post('/evaluate', (_req: Request, res: Response) => {
   });
 });
 
-// POST /api/v1/predictive-cache/demo/:id
 predictiveCacheRoutes.post('/demo/:id', async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id, 10);
+  const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const id = parseInt(rawId || '0', 10);
   const baseUrl = `http://127.0.0.1:${process.env.PORT || 5000}`;
 
   try {

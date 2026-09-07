@@ -57,6 +57,10 @@ export interface AptsStats {
   memory_usage_ratio: number;
   eviction_policy: string;
   eviction_policy_tracked_keys: number;
+  total_ai_evictions?: number;
+  last_evicted_score?: number | null;
+  tiers?: { hot: number; warm: number; cold: number; total?: number };
+  persistence?: { enabled: boolean; snapshot_file: string; last_snapshot: string; restored_keys: number };
 }
 
 export interface AptsInfo {

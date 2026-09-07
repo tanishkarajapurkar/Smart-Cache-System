@@ -4,7 +4,7 @@
   "type": "module",
   "description": "APTS E-Commerce Website & Workload Generator for CacheX",
   "scripts": {
-    "cache-engine": "../Cache_Engine/target/debug/aptsd",
+    "cache-engine": "node ../Cache_Engine/cache-server.js",
     "dev:backend": "npm run dev --prefix backend",
     "dev:frontend": "npm run dev --prefix frontend",
     "simulator": "npm run start --prefix traffic-simulator",

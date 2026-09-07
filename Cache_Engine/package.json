@@ -1,0 +1,10 @@
+{
+  "name": "apts-cache-engine",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "APTS Cache Engine TCP and HTTP Daemon",
+  "main": "cache-server.js",
+  "scripts": {
+    "start": "node cache-server.js"
+  }
+}
