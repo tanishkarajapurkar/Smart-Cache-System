@@ -1735,39 +1735,7 @@
       updateMemorySieve(endpoint);
 
       appendAuditRow(endpoint, isHit, responseTime);
-      // Update Advanced Algorithms Telemetry
-          if (data.anomaly) {
-            const pill = document.getElementById('anomalyStatusPill');
-            const dot = document.getElementById('anomalyStatusDot');
-            const txt = document.getElementById('anomalyStatusText');
-            if (data.anomaly.detected || data.mode === 'protection' || data.mode === 'flash_sale') {
-              if (dot) dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
-              if (txt) txt.innerHTML = '🛡️ <b class="text-rose-400">PROTECTION MODE</b> (Spike Shielded)';
-              if (pill) pill.className = 'flex items-center gap-1.5 bg-rose-950/40 border border-rose-700/60 px-2.5 py-1 rounded-full text-[11px] text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.35)] animate-pulse';
-            } else {
-              if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-              if (txt) txt.textContent = '🟢 Normal Traffic (Stable)';
-              if (pill) pill.className = 'flex items-center gap-1.5 bg-[#070c16] border border-[#141d2e] px-2.5 py-1 rounded-full text-[11px] text-slate-300 shadow-sm';
-            }
-          }
-
-          if (data.tiers) {
-            const hotEl = document.getElementById('tierHotCount');
-            const warmEl = document.getElementById('tierWarmCount');
-            const coldEl = document.getElementById('tierColdCount');
-            if (hotEl) hotEl.textContent = data.tiers.hot ?? 6;
-            if (warmEl) warmEl.textContent = data.tiers.warm ?? 12;
-            if (coldEl) coldEl.textContent = data.tiers.cold ?? 8;
-          }
-
-          if (data.rlTokens) {
-            const tokenEl = document.getElementById('rewardTokenVal');
-            const confEl = document.getElementById('aiConfidenceBadge');
-            if (tokenEl) tokenEl.textContent = (data.rlTokens.tokens || 1580).toLocaleString();
-            if (confEl) confEl.textContent = `${data.rlTokens.accuracy || '92%'} Acc`;
-          }
-
-          updateKPIs();
+      updateKPIs();
     }
 
     let activeStreamFilter = 'all';
@@ -2586,6 +2554,38 @@
           // 7. Live Audit Stream
           if (data.recentStream && data.recentStream.length > 0) {
             renderAuditStreamFromLive(data.recentStream);
+          }
+
+          // 8. Advanced Algorithms & Anomaly Protection
+          if (data.anomaly) {
+            const pill = document.getElementById('anomalyStatusPill');
+            const dot = document.getElementById('anomalyStatusDot');
+            const txt = document.getElementById('anomalyStatusText');
+            if (data.anomaly.detected || data.mode === 'protection' || data.mode === 'flash_sale') {
+              if (dot) dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
+              if (txt) txt.innerHTML = '🛡️ <b class="text-rose-400">PROTECTION MODE</b> (Spike Shielded)';
+              if (pill) pill.className = 'flex items-center gap-1.5 bg-rose-950/40 border border-rose-700/60 px-2.5 py-1 rounded-full text-[11px] text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.35)] animate-pulse';
+            } else {
+              if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+              if (txt) txt.textContent = '🟢 Normal Traffic (Stable)';
+              if (pill) pill.className = 'flex items-center gap-1.5 bg-[#070c16] border border-[#141d2e] px-2.5 py-1 rounded-full text-[11px] text-slate-300 shadow-sm';
+            }
+          }
+
+          if (data.tiers) {
+            const hotEl = document.getElementById('tierHotCount');
+            const warmEl = document.getElementById('tierWarmCount');
+            const coldEl = document.getElementById('tierColdCount');
+            if (hotEl) hotEl.textContent = data.tiers.hot ?? 6;
+            if (warmEl) warmEl.textContent = data.tiers.warm ?? 12;
+            if (coldEl) coldEl.textContent = data.tiers.cold ?? 8;
+          }
+
+          if (data.rlTokens) {
+            const tokenEl = document.getElementById('rewardTokenVal');
+            const confEl = document.getElementById('aiConfidenceBadge');
+            if (tokenEl) tokenEl.textContent = (data.rlTokens.tokens || 1580).toLocaleString();
+            if (confEl) confEl.textContent = `${data.rlTokens.accuracy || '92%'} Acc`;
           }
 
           updateKPIs();
