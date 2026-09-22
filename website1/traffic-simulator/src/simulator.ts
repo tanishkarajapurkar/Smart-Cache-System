@@ -48,7 +48,7 @@ const defaultUsers = isSlowMode ? '1' : '8';
 const CONFIG: SimulatorConfig = {
   baseUrl: args.url || process.env.API_URL || 'http://localhost:5001',
   mode: (args.mode as any) || 'idle',
-  autoIdleDetection: args['auto-idle'] !== 'false',
+  autoIdleDetection: args['auto-idle'] === 'true',
   virtualUsers: parseInt(args.users || defaultUsers, 10)
 };
 
@@ -254,10 +254,35 @@ async function simulateCrawlerBot(sessionId: string) {
   await executeRequest('GET', `/api/v1/products?random_cold_scan=${Date.now()}`, 'bot_cold_scan', sessionId);
 }
 
+// Single request generator for idle background heartbeat (1 request / min)
+async function simulateSingleIdleRequest(sessionId: string) {
+  const choices = [
+    () => executeRequest('GET', '/api/v1/recommendations', 'idle_heartbeat', sessionId),
+    () => executeRequest('GET', '/api/v1/deals', 'idle_heartbeat', sessionId),
+    () => executeRequest('GET', '/api/v1/flash-sales', 'idle_heartbeat', sessionId),
+    () => {
+      const prodId = KNOWN_PRODUCT_IDS[Math.floor(Math.random() * KNOWN_PRODUCT_IDS.length)];
+      return executeRequest('GET', `/api/v1/products/${prodId}`, 'idle_heartbeat', sessionId);
+    },
+    () => {
+      const query = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
+      return executeRequest('GET', `/api/v1/search?q=${encodeURIComponent(query)}`, 'idle_heartbeat', sessionId);
+    },
+    () => {
+      const cat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+      return executeRequest('GET', `/api/v1/products?category=${cat}&limit=12`, 'idle_heartbeat', sessionId);
+    }
+  ];
+  const choice = choices[Math.floor(Math.random() * choices.length)];
+  await choice();
+}
+
 // ----------------------------------------------------------------------------
 // Idle Website Detection & Workload Scaler
 // ----------------------------------------------------------------------------
 async function checkIdleActivity() {
+  if (CONFIG.mode === 'idle') return;
+
   try {
     // Check PredictiveCache AI telemetry for dashboard-triggered mode
     const cacheRes = await fetch(`${CONFIG.baseUrl}/api/v1/predictive-cache/telemetry`);
@@ -280,7 +305,7 @@ async function checkIdleActivity() {
       STATS.secondsSinceHumanActivity = data.secondsSinceActivity || 0;
 
       // Automatically scale simulation mode based on idle detection
-      if (data.recommendedMode && CONFIG.mode !== 'poisoning') {
+      if (data.recommendedMode && CONFIG.mode !== 'poisoning' && CONFIG.mode !== 'idle') {
         CONFIG.mode = data.recommendedMode.toLowerCase() as any;
         STATS.currentMode = data.recommendedMode;
       }
@@ -298,17 +323,23 @@ async function startVirtualUser(userId: number) {
 
   while (true) {
     try {
-      const dice = Math.random() * 100;
-      if (CONFIG.mode === 'poisoning') {
+      if (CONFIG.mode === 'idle') {
+        await simulateSingleIdleRequest(sessionId);
+      } else if (CONFIG.mode === 'poisoning') {
         await simulateCrawlerBot(sessionId);
-      } else if (CONFIG.mode === 'flash_sale' || dice < 35) {
+      } else if (CONFIG.mode === 'flash_sale') {
         await simulateCustomer3(sessionId); // Flash sale shopper
-      } else if (dice < 60) {
-        await simulateCustomer1(sessionId); // Casual browser
-      } else if (dice < 85) {
-        await simulateCustomer2(sessionId); // Searcher & filterer
       } else {
-        await simulateCustomer4(sessionId); // Wishlist shopper
+        const dice = Math.random() * 100;
+        if (dice < 35) {
+          await simulateCustomer3(sessionId); // Flash sale shopper
+        } else if (dice < 60) {
+          await simulateCustomer1(sessionId); // Casual browser
+        } else if (dice < 85) {
+          await simulateCustomer2(sessionId); // Searcher & filterer
+        } else {
+          await simulateCustomer4(sessionId); // Wishlist shopper
+        }
       }
     } catch {
       // Ignore worker failures, continue simulation
