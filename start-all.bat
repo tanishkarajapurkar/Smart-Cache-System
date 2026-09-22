@@ -19,7 +19,7 @@ start "APTS Storefront Frontend" cmd /k "cd /d %~dp0website1\frontend && npm run
 
 timeout /t 3 /nobreak >nul
 
-echo ⚡ [4/4] Launching Background Traffic Simulator (Idle Pace: 1 req / 5 min)...
+echo ⚡ [4/4] Launching Background Traffic Simulator (Idle Pace: 1 req / 1 min)...
 start "APTS Traffic Simulator" cmd /k "cd /d %~dp0website1\traffic-simulator && npm run idle"
 
 echo ======================================================================
