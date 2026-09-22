@@ -5,7 +5,9 @@
   "main": "src/simulator.ts",
   "type": "module",
   "scripts": {
-    "start": "tsx src/simulator.ts",
+    "start": "tsx src/simulator.ts --mode=idle",
+    "idle": "tsx src/simulator.ts --mode=idle --users=1",
+    "demo": "tsx src/simulator.ts --mode=demo --users=1",
     "low": "tsx src/simulator.ts --mode=low",
     "normal": "tsx src/simulator.ts --mode=normal",
     "high": "tsx src/simulator.ts --mode=high",

@@ -20,8 +20,8 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$Root\website
 
 Start-Sleep -Seconds 3
 
-Write-Host "⚡ [4/4] Launching Traffic Simulator..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$Root\website1\traffic-simulator'; npm run normal"
+Write-Host "⚡ [4/4] Launching Traffic Simulator (Idle Pace: 1 req / 5 min)..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$Root\website1\traffic-simulator'; npm run idle"
 
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host "✅ ALL SERVICES ACTIVE!" -ForegroundColor Green
