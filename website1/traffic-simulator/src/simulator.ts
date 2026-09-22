@@ -67,7 +67,7 @@ const STATS: SimStats = {
 
 // Target delays in ms between requests per virtual worker
 const MODE_INTERVALS: Record<string, number> = {
-  idle: 300000,   // 5 minutes (300,000 ms) = exactly 1 request every 5 minutes when idle
+  idle: 60000,    // 1 minute (60,000 ms) = exactly 1 request every 1 minute when idle
   demo: 5000,     // 5 seconds (5,000 ms) = steady presentation pace
   low: 3000,      // ~20 req/min per worker
   normal: 300,    // ~200 req/min
@@ -314,7 +314,7 @@ async function startVirtualUser(userId: number) {
       // Ignore worker failures, continue simulation
     }
 
-    const interval = MODE_INTERVALS[CONFIG.mode] || 300000;
+    const interval = MODE_INTERVALS[CONFIG.mode] || 60000;
     const delay = CONFIG.mode === 'idle' ? interval : interval * (0.8 + Math.random() * 0.4);
     await new Promise(r => setTimeout(r, delay));
   }
